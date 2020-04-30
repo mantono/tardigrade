@@ -1,7 +1,13 @@
 package com.mantono.tardigrade
 
+import kotlinx.coroutines.experimental.channels.Channel
+import java.net.URL
+import java.time.Duration
+import java.util.concurrent.PriorityBlockingQueue
+import java.util.concurrent.TimeUnit
 
-interface PartitionedQueue<E> {
+
+interface PartitionedQueue<E>: WriteQueue<E> {
 	val partitions: Int
 	val capacity: Int
 
@@ -10,8 +16,54 @@ interface PartitionedQueue<E> {
 	 * allows an element to map to a partition
 	 */
 	fun hash(e: E): Int = e.toString().hashCode() % partitions
+}
 
-	suspend fun put(e: E)
+sealed class Result {
+	object Success: Result()
+	class TemporaryFailure(val exception: Throwable?): Result()
+	class PermanentFailure: Result()
+}
+/*
+
+data class Request(val url: URL, val payload: Any)
+
+class RequestConsumer(): Worker<Request, Result> {
+	override fun offer(e: Request): Boolean
+	{
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun offer(e: Request, timeout: Long, unit: TimeUnit): Boolean
+	{
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun put(e: Request)
+	{
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun remainingCapacity(): Int
+	{
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun poll(timeout: Long, unit: TimeUnit): Result?
+	{
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun take(): Result
+	{
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
+	override fun transform(i: Request): Result
+	{
+		Channel<Int>(40).
+		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+	}
+
 }
 
 data class RequestQueue(
@@ -20,7 +72,7 @@ data class RequestQueue(
 		val threads: Int = 1,
 		val connectionAttempts: Int = 100,
 		val failTimePenalty: Duration = Duration.ofSeconds(30)
-): PartitionedQueue<WorkerJob> {
+): Worker<I, O> {
 	private val r = WorkRunner(threads, ::consumer)
 
 	private val queues: List<PriorityBlockingQueue<WorkerJob>> = sequenceOf(0 until partitions)
@@ -62,9 +114,11 @@ data class RequestQueue(
 		}
 	}
 
-	/**
+	*/
+/**
 	 * Return the number of threads that were started
-	 */
+	 *//*
+
 	fun start(): Int = r.start()
 }
 
@@ -94,4 +148,4 @@ class WorkRunner(val threads: Int, val runner: (Int) -> Unit) {
 			}
 		}
 	}
-}
+}*/

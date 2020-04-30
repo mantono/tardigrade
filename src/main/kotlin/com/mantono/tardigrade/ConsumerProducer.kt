@@ -1,6 +1,5 @@
 package com.mantono.tardigrade
 
-import java.util.concurrent.PriorityBlockingQueue
 import java.util.concurrent.TimeUnit
 
 
@@ -22,7 +21,7 @@ interface WriteQueue<in E> {
 	 * Inserts the specified element into this queue, waiting if necessary for
 	 * space to become available.
 	 */
-	fun put(e: E)
+	fun send(e: E)
 
 	/**
 	 * Returns the number of additional elements that this queue can ideally
@@ -59,5 +58,5 @@ interface Producer<out E>: ReadQueue<E> {
  * which consumes event of type [I] and produces event of type [O]
  */
 interface Worker<in I, out O>: WriteQueue<I>, ReadQueue<O> {
-	fun work(i: I): O
+	fun transform(i: I): O
 }
