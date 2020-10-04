@@ -43,9 +43,6 @@ dependencies {
     // Enable for applications
     // runtime("ch.qos.logback", "logback-classic", "1.2.3")
 
-    // Ktor
-    implementation("com.squareup.okhttp3:okhttp:3.14.2")
-
     // Junit
     testImplementation("org.junit.jupiter", "junit-jupiter-api", version("junit"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", version("junit"))

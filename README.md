@@ -1,2 +1,2 @@
 # tardigrade
-Retry and back off handling of HTTP requests
+Retry and back off handling of requests to other services
