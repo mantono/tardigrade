@@ -6,7 +6,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
-private const val DEFAULT_MAX_ATTEMPTS: Int = 3
+private const val DEFAULT_MAX_ATTEMPTS: Int = 5
 
 fun <T> attempt(
     maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
