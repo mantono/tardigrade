@@ -11,14 +11,10 @@ plugins {
     id("org.jmailen.kotlinter") version "1.21.0"
     id("org.sonarqube") version "2.6.2"
     id("application") apply true
-    id("org.jetbrains.kotlin.jvm") version "1.3.70" apply true
+    id("org.jetbrains.kotlin.jvm") version "1.5.20" apply true
     id("java") apply true
     id("maven-publish")
     id("idea") apply true
-}
-
-application {
-    mainClassName = "com.mantono.tardigrade.MainKt"
 }
 
 group = "com.mantono"
@@ -35,15 +31,15 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.4.10")
-    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.3.9")
+    implementation("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", "1.5.20")
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
 
     // Logging
     implementation("io.github.microutils", "kotlin-logging", "1.6.20")
-    // Enable for applications
-    // runtime("ch.qos.logback", "logback-classic", "1.2.3")
 
-    // Junit
+    // Testing
+    testImplementation("org.jetbrains.kotlinx", "kotlinx-coroutines-test", "1.5.1")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", version("junit"))
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", version("junit"))
 }
