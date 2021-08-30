@@ -41,4 +41,13 @@ class BlockingGuardTest {
         assertTrue(result.cause is IllegalStateException)
         assertEquals("3", result.cause.message)
     }
+
+    @Test
+    fun `BlockingGuard alternative syntax`() {
+        val result: Result<String> = attempt(maxAttempts = 10) { "Success" }
+
+        assertTrue(result is Result.Success)
+        result as Result.Success
+        assertEquals("Success", result.value)
+    }
 }

@@ -6,8 +6,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
+private const val DEFAULT_MAX_ATTEMPTS: Int = 3
+
+fun <T> attempt(
+    maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
+    function: () -> T,
+): Result<T> = BlockingGuard<T>(maxAttempts).invoke(function)
+
 class BlockingGuard<T>(
-    private val maxAttempts: Int = 3,
+    private val maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
     private val backOff: (Int) -> Long = ::fibonacci
 ) {
     operator fun invoke(function: () -> T): Result<T> {
@@ -36,17 +43,18 @@ class BlockingGuard<T>(
     }
 }
 
+fun <T> attemptAsync(
+    maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
+    function: suspend () -> T,
+): Deferred<Result<T>> = AsyncGuard<T>(maxAttempts).invoke(function)
+
 class AsyncGuard<T>(
-    private val maxAttempts: Int = 3,
+    private val maxAttempts: Int = DEFAULT_MAX_ATTEMPTS,
     private val scope: CoroutineScope = CoroutineScope(Job()),
     private val backOff: (Int) -> Long = ::fibonacci
 ): CoroutineScope by scope {
     operator fun invoke(function: suspend () -> T): Deferred<Result<T>> {
         return async(scope.coroutineContext) { attempt(function, maxAttempts) }
-    }
-
-    suspend fun await(function: suspend () -> T): Result<T> {
-        return attempt(function, maxAttempts)
     }
 
     private tailrec suspend fun attempt(function: suspend () -> T, attempts: Int): Result<T> {
