@@ -12,7 +12,7 @@ val result: Result<String> = attempt {
 }
 ```
 
-More advanced example, here we create a `BlockingGuard` object with which allows us to configure the
+More advanced example, here we create a `BlockingGuard` object which allows us to configure the
 back-off algorithm used (how much the delay should be after each attempt).
 
 ```kotlin
