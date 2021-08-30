@@ -1,5 +1,7 @@
 package com.mantono.tardigrade
 
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -43,7 +45,14 @@ class BlockingGuardTest {
     @Test
     fun `BlockingGuard alternative syntax`() {
         val result: Result<String> = attempt(maxAttempts = 10) { "Success" }
+        assertTrue(result.isSuccess)
+        assertEquals("Success", result.getOrThrow())
+    }
 
+    @Test
+    fun `AsyncGuard alternative syntax`() {
+        val asyncResult: Deferred<Result<String>> = attemptAsync(maxAttempts = 10) { "Success" }
+        val result: Result<String> = runBlocking { asyncResult.await() }
         assertTrue(result.isSuccess)
         assertEquals("Success", result.getOrThrow())
     }
