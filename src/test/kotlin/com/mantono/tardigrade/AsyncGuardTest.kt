@@ -14,9 +14,8 @@ class AsyncGuardTest {
             deferredResult.await()
         }
 
-        assertTrue(result is Result.Success)
-        result as Result.Success
-        assertEquals("Success", result.value)
+        assertTrue(result.isSuccess)
+        assertEquals("Success", result.getOrThrow())
     }
 
     @Test
@@ -28,8 +27,7 @@ class AsyncGuardTest {
             deferredResult.await()
         }
 
-        assertTrue(result is Result.Error<String>)
-        result as Result.Error<String>
-        assertEquals(RuntimeException::class, result.cause::class)
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is RuntimeException)
     }
 }

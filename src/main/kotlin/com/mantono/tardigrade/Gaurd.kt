@@ -22,23 +22,15 @@ class BlockingGuard<T>(
     }
 
     private tailrec fun attempt(function: () -> T, attempts: Int): Result<T> {
-        val result: Result<T> = tryExecute(function)
+        val result: Result<T> = runCatching(function)
         val remainingAttempts: Int = attempts - 1
-        return if (result is Result.Success || remainingAttempts <= 0) {
+        return if (result.isSuccess || remainingAttempts <= 0) {
             result
         } else {
             val doneAttempts: Int = maxAttempts - remainingAttempts
             val waitTime: Long = backOff(doneAttempts)
             Thread.sleep(waitTime)
             attempt(function, remainingAttempts)
-        }
-    }
-
-    private inline fun tryExecute(function: () -> T): Result<T> {
-        return try {
-            Result.Success(function())
-        } catch(e: Throwable) {
-            Result.Error(e)
         }
     }
 }
@@ -58,23 +50,15 @@ class AsyncGuard<T>(
     }
 
     private tailrec suspend fun attempt(function: suspend () -> T, attempts: Int): Result<T> {
-        val result: Result<T> = tryExecute(function)
+        val result: Result<T> = runCatching { function() }
         val remainingAttempts: Int = attempts - 1
-        return if (result is Result.Success || remainingAttempts <= 0) {
+        return if (result.isSuccess || remainingAttempts <= 0) {
             result
         } else {
             val doneAttempts: Int = maxAttempts - remainingAttempts
             val waitTime: Long = backOff(doneAttempts)
             delay(waitTime)
             attempt(function, remainingAttempts)
-        }
-    }
-
-    private suspend inline fun tryExecute(crossinline function: suspend () -> T): Result<T> {
-        return try {
-            Result.Success(function())
-        } catch(e: Throwable) {
-            Result.Error(e)
         }
     }
 }

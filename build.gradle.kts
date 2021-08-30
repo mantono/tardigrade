@@ -7,10 +7,6 @@ fun version(artifact: String): String {
 fun projectName(): String = project.name.replace("{", "").replace("}", "")
 
 plugins {
-    id("io.gitlab.arturbosch.detekt") version "1.0.0.RC6-2"
-    id("org.jmailen.kotlinter") version "1.21.0"
-    id("org.sonarqube") version "2.6.2"
-    id("application") apply true
     id("org.jetbrains.kotlin.jvm") version "1.5.20" apply true
     id("java") apply true
     id("maven-publish")

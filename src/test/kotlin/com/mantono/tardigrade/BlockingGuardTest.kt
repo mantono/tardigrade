@@ -18,9 +18,8 @@ class BlockingGuardTest {
             if (++attempts == 3) attempts else error("$attempts")
         }
 
-        assertTrue(result is Result.Success)
-        result as Result.Success<Int>
-        assertEquals(3, result.value)
+        assertTrue(result.isSuccess)
+        assertEquals(3, result.getOrThrow())
     }
 
     @Test
@@ -36,18 +35,16 @@ class BlockingGuardTest {
             error("$attempts")
         }
 
-        assertTrue(result is Result.Error)
-        result as Result.Error<Int>
-        assertTrue(result.cause is IllegalStateException)
-        assertEquals("3", result.cause.message)
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is IllegalStateException)
+        assertEquals("3", result.exceptionOrNull()?.message)
     }
 
     @Test
     fun `BlockingGuard alternative syntax`() {
         val result: Result<String> = attempt(maxAttempts = 10) { "Success" }
 
-        assertTrue(result is Result.Success)
-        result as Result.Success
-        assertEquals("Success", result.value)
+        assertTrue(result.isSuccess)
+        assertEquals("Success", result.getOrThrow())
     }
 }
